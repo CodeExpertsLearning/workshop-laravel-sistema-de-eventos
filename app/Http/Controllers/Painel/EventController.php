@@ -4,9 +4,17 @@ namespace App\Http\Controllers\Painel;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Event;
 
 class EventController extends Controller
 {
+    private $event;
+
+    public function __construct(Event $event)
+    {
+        $this->event = $event;
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -14,7 +22,7 @@ class EventController extends Controller
      */
     public function index()
     {
-        //
+        return $this->event->all();
     }
 
     /**
