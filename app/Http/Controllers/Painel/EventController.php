@@ -22,7 +22,9 @@ class EventController extends Controller
      */
     public function index()
     {
-        return $this->event->all();
+        $events = auth()->user()->events()->paginate(10);
+
+        return view('painel.events.index', compact('events'));
     }
 
     /**
@@ -32,7 +34,7 @@ class EventController extends Controller
      */
     public function create()
     {
-        //
+        return view('painel.events.create');
     }
 
     /**
@@ -43,7 +45,13 @@ class EventController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $data = $request->all();
+        $data['is_active'] = true;
+
+        $user = auth()->user();
+        $user->events()->create($data); // Event:+id
+
+        return redirect()->route('events.index');
     }
 
     /**
@@ -65,7 +73,9 @@ class EventController extends Controller
      */
     public function edit($id)
     {
-        //
+        $event = $this->event->find($id);
+
+        return view('painel.events.edit', compact('event'));
     }
 
     /**
@@ -77,7 +87,15 @@ class EventController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $data = $request->all();
+        $data['is_active'] = true;
+
+        $user = auth()->user();
+
+        $event = $user->events()->find($id); // Event:+id
+        $event->update($data);
+
+        return redirect()->route('events.index');
     }
 
     /**
@@ -88,6 +106,9 @@ class EventController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $event = $this->event->find($id);
+        $event->delete();
+
+        return redirect()->route('events.index');
     }
 }

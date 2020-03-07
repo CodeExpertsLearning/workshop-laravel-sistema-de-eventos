@@ -18,7 +18,11 @@ Route::get('/', function () {
 Auth::routes();
 
 
-Route::prefix('painel')->namespace('Painel')->group(function(){
+Route::group(['middleware' => ['auth']], function(){
 
-    Route::resource('/events', 'EventController');
+    Route::prefix('painel')->namespace('Painel')->group(function () {
+
+        Route::resource('/events', 'EventController');
+    });
+
 });
